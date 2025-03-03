@@ -1,7 +1,13 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createMemoryHistory,
+  createWebHistory,
+} from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DashboardView from "../views/DashboardView.vue";
 import LoginView from "../views/LoginView.vue";
+
+const isServer = typeof window === "undefined";
 
 /*
   `createWebHistory()` uses the browser's history API to handle navigation.
@@ -10,11 +16,13 @@ import LoginView from "../views/LoginView.vue";
   - Requires proper server configuration to handle page reloads.
   - If the server is not set up correctly, refreshing the page may cause a 404 error.
   - Alternative: `createWebHashHistory()` (uses `/#/dashboard` instead).
-
   Use this if you want a modern, SEO-friendly URL structure.
+
+  `createMemoryHistory` Abstract Mode is a mode in Vue Router that is used when 
+  - there is no browser environment (i.e., no window or history API), such as in Node.js server-side rendering (SSR).
 */
 const router = createRouter({
-  history: createWebHistory(),
+  history: isServer ? createMemoryHistory() : createWebHistory(), // Use abstract mode for SSR
   routes: [
     { path: "/", component: HomeView },
     {
